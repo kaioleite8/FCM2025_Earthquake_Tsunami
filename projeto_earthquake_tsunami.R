@@ -18,7 +18,8 @@ glimpse(dados)
 nrow(dados)          
 colnames(dados)
 
-dados %>% 
+dados %>%
+  group_by(tsunami) %>% 
   summarise(
     n = n(),
     media_magnitude = mean(magnitude, na.rm = TRUE),
@@ -38,6 +39,7 @@ dados %>%
   print()
 
 # Frequência de cada magnitude dos terremotos 
+
 ggplot(dados, aes(x = magnitude)) +
   geom_histogram(binwidth = 0.2, fill = "steelblue", color = "white") +
   labs(
@@ -45,4 +47,9 @@ ggplot(dados, aes(x = magnitude)) +
     x = "Magnitude (Richter)",
     y = "Frequência"
   ) +
-  theme_minimal()
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    axis.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 11)
+  )
