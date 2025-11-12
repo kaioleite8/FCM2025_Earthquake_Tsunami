@@ -123,9 +123,8 @@ dados %>%
     legend.title = element_text(size = 11, face = "bold")
   )
 
-# ---------------------------
-# Clustering geográfico simples (K-means) - versão enxuta
-# ---------------------------
+
+# Clustering geográfico simples (K-means) 
 
 set.seed(42)
 
