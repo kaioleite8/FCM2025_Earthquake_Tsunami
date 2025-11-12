@@ -2,12 +2,10 @@
 # Grupo: João Lucas Sacomani Gardenal, Beatriz Moreira Magiore e Kaio Murilo Leite
 # Banco de dados: Global Earthquake-Tsunami Risk Assessment
 
-
 ### Primeira exploração e análises simples ###
 
 library(tidyverse)
 library(maps)
-
 
 # Importar o conjunto de dados
 dados <- read.csv("earthquake_data_tsunami.csv")
@@ -42,7 +40,6 @@ dados %>%
   print()
 
 # Frequência de cada magnitude dos terremotos 
-
 ggplot(dados, aes(x = magnitude, fill = tsunami)) +
   geom_histogram(binwidth = 0.2, color = "white") +
   labs(
@@ -61,7 +58,6 @@ ggplot(dados, aes(x = magnitude, fill = tsunami)) +
   )
 
 # profundidade vs magnitude
-
 dados %>% 
   group_by(tsunami) %>% 
   ggplot(aes(x = magnitude, y = depth, color = tsunami)) +
@@ -71,7 +67,6 @@ dados %>%
   labs(title = "Relação entre Profundidade e Magnitude",
        y = "Profundidade (km)", x = "Magnitude")+
   guides(color = guide_legend(override.aes = list(size = 3)))+
-  #scale_y_continuous(trans = "log10", limits = c(2,700))+
   facet_wrap(.~tsunami)+
   theme_minimal()+
   theme(
@@ -86,7 +81,6 @@ dados %>%
   )
 
 # latitude e longitude
-
 dados %>% 
   arrange(tsunami) %>% 
   ggplot(aes(x = longitude, y = latitude, color = tsunami)) +
@@ -110,13 +104,12 @@ dados %>%
   )
 
 # por ano
-
 dados %>%
   count(Year, tsunami) %>%
   ggplot(aes(x = Year, y = n, fill = tsunami)) +
   geom_col(position = position_stack(reverse = TRUE), alpha = 0.8) +
   scale_fill_manual(values = c("#1f77b4", "#ff7f0e"),
-                     name = "Tsunami", labels = c("0" = "Não", "1" = "Sim")) +
+                    name = "Tsunami", labels = c("0" = "Não", "1" = "Sim")) +
   labs(title = "Número de Eventos Sísmicos por Ano (2001 - 2022)",
        x = "Ano", y = "Número de eventos")+
   theme_minimal()+
@@ -129,3 +122,71 @@ dados %>%
     legend.text = element_text(size = 10),
     legend.title = element_text(size = 11, face = "bold")
   )
+
+# ---------------------------
+# Clustering geográfico simples (K-means) - versão enxuta
+# ---------------------------
+
+set.seed(42)
+
+# selecionar e limpar colunas necessárias
+proc <- dados %>%
+  select(latitude, longitude, magnitude) %>%
+  filter(!is.na(latitude) & !is.na(longitude) & !is.na(magnitude))
+
+# matriz para clustering (apenas lat, long, mag) e padronizar
+X <- proc %>% select(latitude, longitude, magnitude) %>% as.matrix()
+X_scaled <- scale(X)
+
+# escolher k simples
+k <- 4
+km <- kmeans(X_scaled, centers = k, nstart = 20)
+
+# anexar cluster
+proc$zone <- factor(km$cluster)
+
+# calcular centróides (no espaço original)
+centroids <- proc %>%
+  group_by(zone) %>%
+  summarise(
+    cen_lat = mean(latitude),
+    cen_long = mean(longitude),
+    cen_mag = mean(magnitude),
+    n = n()
+  )
+
+# plot simples: mapa + pontos coloridos por cluster
+world <- map_data("world")
+
+p_map <- ggplot() +
+  geom_polygon(data = world, aes(x = long, y = lat, group = group),
+               fill = "gray96", colour = "gray80", size = 0.2) +
+  geom_point(data = proc, aes(x = longitude, y = latitude, color = zone, size = magnitude),
+             alpha = 0.7) +
+  geom_point(data = centroids, aes(x = cen_long, y = cen_lat),
+             color = "black", shape = 8, size = 3) +
+  scale_size_continuous(range = c(1, 4)) +
+  coord_quickmap() +
+  labs(title = paste0("K-means (k=", k, ") - Zonas geográficas"),
+       x = "Longitude", y = "Latitude", color = "Zone", size = "Magnitude") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+print(p_map)
+
+# gráfico simples: magnitude média por zona
+zone_stats <- proc %>%
+  group_by(zone) %>%
+  summarise(
+    total_events = n(),
+    mean_magnitude = mean(magnitude)
+  ) %>%
+  arrange(desc(mean_magnitude))
+
+p_bar <- ggplot(zone_stats, aes(x = reorder(zone, mean_magnitude), y = mean_magnitude)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Magnitude média por zona", x = "Zone", y = "Magnitude média") +
+  theme_minimal()
+
+print(p_bar)
