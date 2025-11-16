@@ -189,3 +189,44 @@ p_bar <- ggplot(zone_stats, aes(x = reorder(zone, mean_magnitude), y = mean_magn
   theme_minimal()
 
 print(p_bar)
+
+
+
+
+# Correlação entre variáveis numéricas
+
+vars_corr <- dados %>%
+  select(magnitude, depth, cdi, mmi, sig, nst, dmin, gap)
+
+# Matriz de correlação
+corr_mat <- cor(vars_corr, use = "pairwise.complete.obs") %>%
+  round(2)
+
+# Converter pra formato longo
+corr_long <- corr_mat %>%
+  as.data.frame() %>%
+  rownames_to_column("var1") %>%
+  pivot_longer(-var1, names_to = "var2", values_to = "cor")
+
+# Plot com números
+ggplot(corr_long, aes(var1, var2, fill = cor)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = cor), size = 4) +
+  scale_fill_gradient2(
+    low = "steelblue",
+    mid = "white",
+    high = "tomato",
+    midpoint = 0,
+    limits = c(-1, 1)
+  ) +
+  labs(
+    title = "Correlação entre Variáveis Sísmicas",
+    x = "",
+    y = "",
+    fill = "Correlação"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+    plot.title = element_text(hjust = 0.5, size = 14)
+  )
