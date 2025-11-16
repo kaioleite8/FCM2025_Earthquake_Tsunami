@@ -123,9 +123,8 @@ dados %>%
     legend.title = element_text(size = 11, face = "bold")
   )
 
-# ---------------------------
-# Clustering geográfico simples (K-means) - versão enxuta
-# ---------------------------
+
+# Clustering geográfico simples (K-means) 
 
 set.seed(42)
 
@@ -189,9 +188,6 @@ p_bar <- ggplot(zone_stats, aes(x = reorder(zone, mean_magnitude), y = mean_magn
   labs(title = "Magnitude média por zona", x = "Zone", y = "Magnitude média") +
   theme_minimal()
 
-<<<<<<< HEAD
-print(p_bar)
-=======
 print(p_bar)
 
 
@@ -234,9 +230,3 @@ ggplot(corr_long, aes(var1, var2, fill = cor)) +
     axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
     plot.title = element_text(hjust = 0.5, size = 14)
   )
-
-
-
-
-
->>>>>>> 5773d65 (salva alterações locais antes de trocar de branch)
