@@ -331,7 +331,39 @@ p_bar <- ggplot(zone_stats, aes(x = reorder(zone, mean_magnitude), y = mean_magn
 print(p_bar)
 
 
-# Séries temporais (apenas ideia...)
+
+###### 1. Gutenberg-Richter
+# Criar tabela de frequência acumulada
+gr_data <- dados %>%
+  count(magnitude) %>%
+  arrange(desc(magnitude)) %>%
+  mutate(
+    cumsum_n = cumsum(n),
+    log_n = log10(cumsum_n)
+  )
+
+# Plotar
+ggplot(gr_data, aes(x = magnitude, y = log_n)) +
+  geom_point() +
+  stat_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  labs(title = "Lei de Gutenberg-Richter", y = "Log(N >= M)", x = "Magnitude")
+
+# 2. Energia Liberada
+dados %>%
+  group_by(Year) %>%
+  summarise(total_energy = sum(energy, na.rm = TRUE)) %>%
+  ggplot(aes(x = Year, y = total_energy)) +
+  geom_col(fill = "firebrick") + 
+  # 'scientific = FALSE' para evitar notação científica, 
+  scale_y_continuous(labels = scales::scientific) +
+  labs(
+    title = "Energia Sísmica: A Desproporção dos Grandes Eventos",
+    subtitle = "2004 (Sumatra) e 2011 (Tohoku)",
+    y = "Energia Total (Joules)",
+    x = "Ano"
+  ) +
+  theme_minimal()
+# Séries temporais
 annual_summary <- dados %>%
   group_by(Year) %>%
   summarise(
