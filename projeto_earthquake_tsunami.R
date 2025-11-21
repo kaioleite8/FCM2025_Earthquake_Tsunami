@@ -212,28 +212,6 @@ dados %>%
     axis.text = element_text(size = 11)
   )
 
-## latitude e longitude
-dados %>% 
-  arrange(tsunami) %>% 
-  ggplot(aes(x = longitude, y = latitude, color = tsunami)) +
-  annotation_borders("world", colour = "gray70", fill = "gray90") +
-  geom_point(alpha = 0.5, size = 1.5) +
-  scale_color_manual(values = c("#1f77b4", "#ff7f0e"),
-                     name = "Tsunami", labels = c("0" = "Não", "1" = "Sim")) +
-  coord_fixed() +
-  labs(title = "Distribuição Geográfica dos Terremotos (2001 - 2022)",
-       x = "Longitude", y = "Latitude")+
-  guides(color = guide_legend(override.aes = list(size = 3)))+
-  theme_minimal()+
-  theme(
-    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
-    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
-    axis.title.y = element_text(size = 12, face = "bold", margin = margin(r = 10)),
-    axis.text = element_text(size = 11),
-    legend.position = "bottom",
-    legend.text = element_text(size = 10),
-    legend.title = element_text(size = 11, face = "bold")
-  )
 
 # numero de eventos por ano
 dados %>%
