@@ -1,0 +1,687 @@
+\documentclass[aspectratio= 169, xcolor=dvipsnames]{beamer}
+
+\usepackage[portuguese,brazil]{babel}
+\usepackage[fixlanguage]{babelbib}
+\selectbiblanguage{brazil}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{fontenc}
+\usepackage{multicol,multirow}
+\usepackage{array}
+\usepackage{setspace,ragged2e} 
+\usepackage{geometry}
+\usepackage{placeins}
+\usepackage{graphicx}
+\usepackage[portuguese,ruled,lined]{algorithm2e}
+\usepackage{algorithmic}
+\usepackage{natbib}
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{xcolor}
+
+
+\lstset{
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true
+}
+
+
+\definecolor{orangepython}{RGB}{255,228,181}
+\definecolor{bluepython}{RGB}{230,220,250} 
+\definecolor{greenpython}{RGB}{180,238,180}
+\definecolor{cinza}{RGB}{220,220,220}
+\definecolor{amarelo}{RGB}{255,255,0}
+\definecolor{cor1}{RGB}{0, 169,90}
+\definecolor{cor2}{RGB}{19,127,77}
+\setbeamercolor{block body}{bg=gray!10}
+
+\setbeamertemplate{caption}[numbered]
+
+\usetikzlibrary{patterns,arrows,decorations.pathreplacing}
+\usetikzlibrary{mindmap,trees,shadows}
+\usetikzlibrary{shapes.geometric, arrows,shapes.arrows,shapes,snakes}
+\usetikzlibrary{calc,arrows.meta, positioning, fit, backgrounds}
+\usetikzlibrary{shapes,backgrounds}
+\usetikzlibrary{arrows}
+
+\bibliographystyle{abbrvnat}
+
+\usetheme{CambridgeUS}
+\definecolor{cor1}{RGB}{43,75,162}
+\definecolor{cor2}{RGB}{75,207,173}
+\setbeamercolor{section in head/foot}{bg=cor2,fg=white}
+\setbeamercolor{titlelike}{fg=cor1}
+\setbeamercolor{subsection in head/foot}{bg=cor1,fg=white}
+\setbeamercolor{item}{fg=cor2, bg=cor1}
+\setbeamercolor{palette primary}{fg=cor1,bg=cor2}
+\setbeamercolor{palette secondary}{fg=cor1}
+\setbeamercolor{palette tertiary}{bg=cor1}
+\setbeamercolor{block title}{fg=cor1}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{caption name}{fg=cor1}
+
+\title[Projeto Final - FCM 2025]{\textbf{Global Earthquake \& Tsunami Risk Assessment}}
+
+\author[Beatriz, João Lucas e Kaio]{\textbf{Beatriz Moreira Magiore$^{1}$, João Lucas Sacomani Gardenal$^{1}$ e Kaio Murilo Leite$^{2}$}}
+
+\institute[]{
+$^{1}$ PPG Biometria, Instituto de Biociências, UNESP, Botucatu \\
+$^{2}$ PPG Biologia Vegetal, Instituto de Biociências, UNESP, Botucatu\\[0.5cm] 
+%\vspace{-1.8cm}
+\centering
+\includegraphics[width=0.11\textwidth]{figuras/01biometria_logo_cor.png} \hspace{1cm}
+\includegraphics[width=0.3\textwidth]{figuras/idvisualppgbvi.jpg} 
+}
+
+\date[\today]{}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Sumário}
+    \tableofcontents[hideothersubsections]
+\end{frame}
+
+\section{Conjunto de dados}
+\begin{frame}{Conjunto de dados}
+    \begin{minipage}[c]{4cm}
+        \centering\includegraphics[width=0.6\textwidth]{figuras/Kaggle.png}
+    \end{minipage}
+    \begin{minipage}[c]{10cm}
+        \centering\textbf{Global Earthquake \& Tsunami Risk Assessment} \\
+        Ahmed Mohamed Zaki
+    \end{minipage} \vspace{\baselineskip}
+
+    \begin{itemize}
+        \item Conjunto de dados de avaliação de risco de terremoto e tsunami \vspace{0.5\baselineskip}
+        \item Informações geoespaciais, características sísmicas e indicadores de potencial de tsunami \vspace{0.5\baselineskip}
+        \item 782 terremotos registrados globalmente entre os anos de 2001 e 2022
+    \end{itemize} \vspace{0.7\baselineskip}
+    \begin{center}
+        \includegraphics[width=1.5cm]{figuras/Rlogo.png} \hspace{2cm}
+        \includegraphics[width=2cm]{figuras/RStudio_Logo.png} \hspace{2cm}
+        \includegraphics[width=2.5cm]{figuras/git-logo.png}
+    \end{center}
+\end{frame}
+
+\section{Descrição das variáveis}
+\begin{frame}{Variáveis}
+    \scriptsize
+    \begin{table}[h!]
+    \centering
+    \caption{Descrição das variáveis do conjunto de dados}
+    \begin{tabular}{llll}
+    \hline
+    \textbf{Variável} & \textbf{Tipo} & \textbf{Descrição} & \textbf{Intervalo} \\
+    \hline
+    
+    magnitude & \textit{double} & Magnitude do terremoto (escala Richter) & 6.5 -- 9.1 \\
+    
+    cdi & \textit{integer} & Medida do impacto populacional (Community Decimal Intensity) & 0 -- 9 \\
+    
+    mmi & \textit{integer} & Indicador de danos estruturais (Modified Mercalli Intensity) & 1 -- 9 \\
+    
+    sig & \textit{integer} & Score de significância do evento & 650 -- 2910 \\
+    
+    nst & \textit{integer} & Número de estações de monitoramento sísmico & 0 -- 934 \\
+    
+    dmin & \textit{double} & Distância do evento até a estação sísmica mais próxima (graus) & 0.0 -- 17.7 \\
+    
+    gap & \textit{double} & Lacuna azimutal entre estações (graus) & 0.0 -- 239.0 \\
+    
+    depth & \textit{double} & Profundidade do foco do terremoto (km) & 2.7 -- 670.8 \\
+    
+    latitude & \textit{double} & Latitude do epicentro (WGS84) & --61.85\(^o\) -- +71.63\(^o\) \\
+    
+    longitude & \textit{double} & Longitude do epicentro (WGS84) & --179.97\(^o\) -- +179.66\(^o\) \\
+    
+    Year & \textit{integer} & Ano de ocorrência & 2001 -- 2022 \\
+    
+    Month & \textit{integer} & Mês de ocorrência & 1 -- 12 \\
+    
+    tsunami & \textit{integer} & Potencial de tsunami & 0 = não; 1 = sim \\
+    \hline
+    \end{tabular}
+    \end{table}
+\end{frame}
+
+\section{Análises}
+\begin{frame}[fragile]{Pacotes e leitura do arquivo}
+    \begin{lstlisting}[language=R]
+    library(tidyverse)
+    library(maps)
+
+    dados <- read.csv("earthquake_data_tsunami.csv")
+
+    head(dados)
+    \end{lstlisting}
+    \begin{block}{}
+        \begin{table}[h]
+        \tiny
+        \centering
+        \begin{tabular}{ccccccccccccccc}
+         & magnitude & cdi & mmi & sig & nst & dmin & gap & depth & latitude & longitude & Year & Month & tsunami \\
+        1 & 7.0 & 8 & 7 & 768 & 117 & 0.509 & 17 & 14.000  & -9.7963  & 159.596  & 2022 & 11 & 1 \\
+        2 & 6.9 & 4 & 4 & 735 &  99 & 2.229 & 34 & 25.000  & -4.9559  & 100.738  & 2022 & 11 & 0 \\
+        3 & 7.0 & 3 & 3 & 755 & 147 & 3.125 & 18 & 579.000 & -20.0508 & -178.346 & 2022 & 11 & 1 \\
+        4 & 7.3 & 5 & 5 & 833 & 149 & 1.865 & 21 & 37.000  & -19.2918 & -172.129 & 2022 & 11 & 1 \\
+        5 & 6.6 & 0 & 2 & 670 & 131 & 4.998 & 27 & 624.464 & -25.5948 & 178.278  & 2022 & 11 & 1 \\
+        6 & 7.0 & 4 & 3 & 755 & 142 & 4.578 & 26 & 660.000 & -26.0442 & 178.381  & 2022 & 11 & 1
+        \end{tabular}
+        \end{table}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Pacotes e leitura do arquivo}
+    \begin{lstlisting}[language=R]
+    glimpse(dados)
+    \end{lstlisting}
+    \begin{block}{}
+\begin{table}[h]
+\scriptsize
+\centering
+\begin{tabular}{llll}
+& Rows: 782 \\
+& Columns: 13 \\
+\$ & magnitude & \(<dbl>\) & 7.0, 6.9, 7.0, 7.3, 6.6, 7.0, 6.8, 6.7, 6.8, 7.6, 6.9, 6.5, 7.0, 7.6,… \\
+\$  & cdi & \(<int>\) & 8, 4, 3, 5, 0, 4, 1, 7, 8, 9, 9, 7, 7, 8, 9, 7, 9, 3, 7, 2, 6, 6, 6, 6,… \\
+\$  & mmi & \(<int>\) & 7, 4, 3, 5, 2, 3, 3, 6, 7, 8, 9, 7, 5, 8, 8, 6, 8, 2, 5, 5, 5, 5, 4, 4,… \\
+\$  & sig & \(<int>\) & 768, 735, 755, 833, 670, 755, 711, 797, 1179, 1799, 887, 756, 761,… \\
+\$  & nst & \(<int>\) & 117, 99, 147, 149, 131, 142, 136, 145, 175, 271, 215, 178, 192, 272,… \\
+\$  & dmin & \(<dbl>\) & 0.509, 2.229, 3.125, 1.865, 4.998, 4.578, 4.678, 1.151, 2.137,… \\
+\$  & gap & \(<dbl>\) & 17, 34, 18, 21, 27, 26, 22, 37, 92, 69, 34, 54, 45, 12, 34, 34, 22, 31,… \\
+\$  & depth & \(<dbl>\) & 14.000, 25.000, 579.000, 37.000, 624.464, 660.000, 630.379, 20.000,… \\
+\$  & latitude & \(<dbl>\) & -9.7963, -4.9559, -20.0508, -19.2918, -25.5948, -26.0442, -25.9678,… \\
+\$  & longitude & \(<dbl>\) & 159.5960, 100.7380, -178.3460, -172.1290, 178.2780, 178.3810,… \\
+\$  & Year & \(<int>\) & 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022,… \\
+\$  & Month & \(<int>\) & 11, 11, 11, 11, 11, 11, 10, 9, 9, 9, 9, 9, 9, 9, 9, 8, 7, 6, 5, 5, 5,… \\
+\$  & tsunami & \(<int>\) & 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1,…
+\end{tabular}
+\end{table}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Análise descritiva}
+    \begin{lstlisting}[language=R]
+    dados %>%
+        group_by(tsunami) %>%
+        summarise(
+        n = n(),
+        media_magnitude = mean(magnitude, na.rm = TRUE),
+        mediana_magnitude = median(magnitude, na.rm = TRUE),
+        sd_magnitude = sd(magnitude, na.rm = TRUE),
+        media_depth = mean(depth, na.rm = TRUE),
+        mediana_depth = median(depth, na.rm = TRUE),
+        sd_depth = sd(depth, na.rm = TRUE)
+        )
+    \end{lstlisting}
+
+    \begin{block}{}
+        \begin{table}[h]
+        \centering
+        \scriptsize
+        \begin{tabular}{cccccccc}
+        \hline
+        \multicolumn{1}{c}{\multirow{2}{*}{tsunami}} & \multicolumn{1}{c}{\multirow{2}{*}{n}} & \multicolumn{3}{c}{magnitude} & \multicolumn{3}{c}{profundidade} \\
+        \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{média} & \multicolumn{1}{c}{mediana} & \multicolumn{1}{c}{sd} & \multicolumn{1}{c}{média} & \multicolumn{1}{c}{mediana} & \multicolumn{1}{c}{sd} \\
+        \hline
+        0 & 478 & 6.942803 & 6.8 & 0.4595409 & 69.66736 & 26.0000  & 127.5012 \\
+        1 & 304 & 6.938487 & 6.8 & 0.4232504 & 85.65680 & 26.9715 & 151.0803
+        \end{tabular}
+        \end{table}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Distribuição das magnitudes}
+    \begin{lstlisting}[language=R]
+    ggplot(dados, aes(x = magnitude, fill = tsunami)) +
+        geom_histogram(binwidth = 0.2, color = "white") +
+        labs(
+        title = "Distribuicao das magnitudes dos terremotos (2001 - 2022)",
+        x = "Magnitude (Richter)",
+        y = "Frequencia"
+        ) +
+        scale_fill_manual(values = c("#1f77b4", "#ff7f0e"),
+        name = "Tsunami", labels = c("0" = "Nao", "1" = "Sim")) +
+        theme_minimal()+
+        theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+        )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/mag-freq.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Número de eventos por ano}
+    \begin{lstlisting}[language=R]
+    dados %>%
+      count(Year, tsunami) %>%
+      ggplot(aes(x = Year, y = n, fill = tsunami)) +
+      geom_col(position = position_stack(reverse = TRUE), alpha = 0.8) +
+      scale_fill_manual(values = c("#1f77b4", "#ff7f0e"), name = "Tsunami", 
+                        labels = c("0" = "Nao", "1" = "Sim")) +
+      labs(title = "Numero de Eventos Sismicos por Ano (2001 - 2022)",
+           x = "Ano", y = "Numero de eventos")+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11),
+        legend.position = "bottom",
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold")
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/eventos-ano.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Correlação entre variáveis}
+    \begin{lstlisting}[language=R]
+    vars_corr <- dados %>%
+      select(magnitude, depth, cdi, mmi, sig, dmin, gap)
+
+    # Matriz de correlacao
+    corr_mat <- cor(vars_corr, use = "pairwise.complete.obs") %>%
+      round(2)
+
+    # Converter pra formato longo
+    corr_long <- corr_mat %>%
+      as.data.frame() %>%
+      rownames_to_column("var1") %>%
+      pivot_longer(-var1, names_to = "var2", values_to = "cor")
+    \end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]{Correlação entre variáveis}
+    \begin{lstlisting}[language=R]
+    ggplot(corr_long, aes(var1, var2, fill = cor)) +
+      geom_tile(color = "white") +
+      geom_text(aes(label = cor), size = 4) +
+      scale_fill_gradient2(
+        low = "steelblue", mid = "white", high = "tomato",
+        midpoint = 0, limits = c(-1, 1)) +
+      labs(
+        title = "Correlacao entre Variaveis Sismicas", x = "", y = "",
+        fill = "Correlacao") +
+      theme_minimal() +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+        plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/correlacao.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Profundidade \emph{vs.} Magnitude}
+    \begin{lstlisting}[language=R]
+    dados %>% 
+      group_by(tsunami) %>% 
+      ggplot(aes(x = magnitude, y = depth, color = tsunami)) +
+      geom_point(alpha = 0.5) +
+      scale_color_manual(values = c("#1f77b4", "#ff7f0e"), name = "Tsunami", labels = c("0" = "Nao", "1" = "Sim")) +
+      labs(title = "Relacao entre Profundidade e Magnitude",
+           y = "Profundidade (km)", x = "Magnitude")+
+      scale_y_reverse() +
+      guides(color = guide_legend(override.aes = list(size = 3)))+
+      facet_wrap(.~tsunami)+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11),
+        legend.position = "bottom",
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size = 11, face = "bold")
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/prof-mag.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Significância \emph{vs.} Impacto populacional}
+    \begin{lstlisting}[language=R]
+    dados %>% 
+      ggplot(aes(y = sig, x = cdi)) +
+      geom_point(alpha = 0.5, color = "blue") +
+      scale_x_continuous(limits = c(-0.5, 9.5), breaks = 0:9) +
+      labs(title = "Relacao entre Significancia e Impacto populacional",
+           x = "Impacto populacional", y = "Significancia")+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/sig-cdi.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Significância \emph{vs.} Magnitude}
+    \begin{lstlisting}[language=R]
+    dados %>% 
+      ggplot(aes(y = sig, x = magnitude)) +
+      geom_point(alpha = 0.5, color = "blue") +
+      labs(title = "Relacao entre Significancia e Magnitude",
+           x = "Magnitude", y = "Significancia")+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/sig-mag.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Significância \emph{vs.} Danos estruturais}
+    \begin{lstlisting}[language=R]
+    dados %>% 
+      ggplot(aes(y = sig, x = mmi)) +
+      geom_point(alpha = 0.5, color = "blue") +
+      scale_x_continuous(limits = c(0.5, 9.5), breaks = 1:9) +
+      labs(title = "Relacao entre Significancia e Danos estruturais",
+           x = "Danos estruturais", y = "Significancia")+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/sig-mmi.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Produndidade \emph{vs.} Danos estruturais}
+    \begin{lstlisting}[language=R]
+    dados %>% 
+      ggplot(aes(x = mmi, y = depth)) +
+      geom_point(alpha = 0.5, color = "blue") +
+      labs(title = "Relacao entre Profundidade e Danos estruturais",
+           y = "Profundidade (km)", x = "Danos estruturais")+
+      scale_x_continuous(limits = c(0.5, 9.5), breaks = 1:9) +
+      scale_y_reverse() +
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/depth-mmi.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Clustering geográfico simples (K-means)}
+    \begin{lstlisting}[language=R]
+    set.seed(42)
+
+    proc <- dados %>%
+      select(latitude, longitude, magnitude) %>%
+      filter(!is.na(latitude) & !is.na(longitude) & !is.na(magnitude))
+    
+    X <- proc %>% select(latitude, longitude, magnitude) %>% as.matrix()
+    X_scaled <- scale(X)
+    
+    k <- 4
+    km <- kmeans(X_scaled, centers = k, nstart = 20)
+    
+    proc$zone <- factor(km$cluster)
+    
+    centroids <- proc %>%
+      group_by(zone) %>%
+      summarise(
+        cen_lat = mean(latitude),
+        cen_long = mean(longitude),
+        cen_mag = mean(magnitude),
+        n = n() )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]{Clustering geográfico simples (K-means)}
+    \begin{lstlisting}[language=R]
+    world <- map_data("world")
+
+    ggplot() +
+      geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "gray96", colour = "gray80", size = 0.2) +
+      geom_point(data = proc, aes(x = longitude, y = latitude, color = zone, size = magnitude), alpha = 0.7) +
+      geom_point(data = centroids, aes(x = cen_long, y = cen_lat), color = "black", shape = 8, size = 3) +
+      scale_size_continuous(range = c(1, 4)) +
+      coord_quickmap() +
+      labs(title = paste0("K-means (k=", k, ") - Zonas geograficas"),
+           x = "Longitude", y = "Latitude", color = "Zone", size = "Magnitude") +
+      theme_minimal() +
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11),
+        legend.position = "bottom",
+        legend.text = element_text(size = 10),
+        legend.title = element_text(size = 10, face = "bold") )
+    \end{lstlisting}
+\end{frame}
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/mapa.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Gutenberg-Richter}
+    \begin{lstlisting}[language=R]
+    gr_data <- dados %>%
+      count(magnitude) %>%
+      arrange(desc(magnitude)) %>%
+      mutate(
+        cumsum_n = cumsum(n),
+        log_n = log10(cumsum_n)
+      )
+    
+    ggplot(gr_data, aes(x = magnitude, y = log_n)) +
+      geom_point() +
+      stat_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+      labs(title = "Lei de Gutenberg-Richter", y = "Log(N >= M)", x = "Magnitude")+
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      ) 
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/Gutenberg-Richter.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Energia liberada}
+    \begin{lstlisting}[language=R]
+    # Formula de Gutenberg-Richter (Energia em Joules): log E = 4.8 + 1.5M
+    dados <- dados %>% 
+      mutate(energy = 10^(4.8 + 1.5 * magnitude))
+    dados %>%
+      group_by(Year) %>%
+      summarise(total_energy = sum(energy, na.rm = TRUE)) %>%
+      ggplot(aes(x = Year, y = total_energy)) +
+      geom_col(fill = "firebrick", alpha = 0.8) + 
+      scale_y_continuous(labels = scales::scientific) +
+      labs(
+        title = "Energia Sismica Total Liberada por Ano",
+        subtitle = "A escala exponencial destaca anos com eventos extremos (ex: 2004, 2011)",
+        y = "Energia Total (Joules)", x = "Ano") +
+      theme_minimal() +
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text.x = element_text(size = 10, angle = 45, hjust = 1) )
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/energia.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Séries temporais}
+    \begin{lstlisting}[language=R]
+    annual_summary <- dados %>%
+      group_by(Year) %>%
+      summarise(
+        n_events = n(),
+        mean_magnitude = mean(magnitude, na.rm = TRUE),
+        sd_magnitude = sd(magnitude, na.rm = TRUE),
+        mean_depth = mean(depth, na.rm = TRUE),
+        sd_depth = sd(depth, na.rm = TRUE),
+        n_tsunami = sum(as.numeric(as.character(tsunami)) == 1, na.rm = TRUE)
+      ) %>%
+      mutate(
+        prop_tsunami = n_tsunami / n_events
+      ) %>%
+      arrange(Year)
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{Resumo anual (magnitude e profundidade)}
+    \tiny
+    \begin{table}[ht]
+\centering
+\begin{tabular}{cccccccc}
+\hline
+Year & n\_events & mean\_magnitude & sd\_magnitude & mean\_depth & sd\_depth & n\_tsunami & prop\_tsunami \\
+\hline
+2001 & 28 & 7.03 & 0.49 & 40.56 & 31.30 & 0 & 0 \\
+2002 & 25 & 6.90 & 0.43 & 37.46 & 48.10 & 0 & 0 \\
+2003 & 31 & 6.89 & 0.41 & 34.42 & 34.00 & 0 & 0 \\
+2004 & 32 & 6.96 & 0.53 & 41.98 & 57.38 & 0 & 0 \\
+2005 & 28 & 6.94 & 0.50 & 76.10 & 108.45 & 0 & 0 \\
+2006 & 26 & 6.94 & 0.52 & 30.22 & 29.44 & 0 & 0 \\
+2007 & 37 & 7.05 & 0.54 & 49.48 & 72.41 & 0 & 0 \\
+2008 & 25 & 6.90 & 0.34 & 35.23 & 29.47 & 0 & 0 \\
+2009 & 26 & 7.16 & 0.47 & 72.84 & 124.51 & 0 & 0 \\
+2010 & 41 & 7.00 & 0.45 & 49.52 & 97.26 & 0 & 0 \\
+2011 & 34 & 6.99 & 0.51 & 46.06 & 46.45 & 0 & 0 \\
+2012 & 31 & 7.07 & 0.53 & 69.81 & 111.80 & 0 & 0 \\
+2013 & 53 & 6.89 & 0.42 & 97.76 & 169.92 & 34 & 0.642 \\
+2014 & 48 & 6.84 & 0.40 & 75.39 & 133.28 & 40 & 0.833 \\
+2015 & 53 & 6.90 & 0.40 & 100.33 & 183.22 & 33 & 0.623 \\
+2016 & 43 & 6.94 & 0.42 & 93.22 & 151.50 & 31 & 0.721 \\
+2017 & 36 & 6.81 & 0.41 & 94.89 & 169.57 & 27 & 0.750 \\
+2018 & 43 & 6.95 & 0.42 & 145.81 & 223.69 & 33 & 0.767 \\
+2019 & 33 & 6.86 & 0.36 & 105.18 & 165.35 & 26 & 0.788 \\
+2020 & 27 & 6.91 & 0.40 & 81.24 & 150.76 & 15 & 0.556 \\
+2021 & 42 & 7.05 & 0.48 & 70.55 & 121.20 & 33 & 0.786 \\
+2022 & 40 & 6.81 & 0.28 & 128.43 & 211.16 & 32 & 0.800 \\
+\hline
+\end{tabular}
+\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Magnitude média por ano}
+    \begin{lstlisting}[language=R]
+    ggplot(annual_summary, aes(x = Year, y = mean_magnitude)) +
+      geom_line() + geom_point() +
+      geom_smooth(method = "loess", se = TRUE) +
+      labs(title = "Magnitude media por ano", y = "Magnitude media", x = "Ano") +
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/mag-ano.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Profundidade média por ano}
+    \begin{lstlisting}[language=R]
+    ggplot(annual_summary, aes(x = Year, y = mean_depth)) +
+      geom_line() + geom_point() +
+      geom_smooth(method = "loess", se = TRUE) +
+      labs(title = "Profundidade media por ano", y = "Profundidade media (km)", x = "Ano") +
+      theme_minimal()+
+      theme(
+        plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(size = 12, face = "bold"),
+        axis.title.y = element_text(size = 12, face = "bold"),
+        axis.text = element_text(size = 11)
+      )
+    \end{lstlisting}    
+\end{frame}
+
+\begin{frame}{}
+    \vspace{\baselineskip}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figuras/depth-ano.pdf}
+\end{frame}
+
+\section{Conclusão}
+\begin{frame}{Conclusão}
+    \begin{itemize}
+        \item Maioria dos eventos registrados no período apresentaram magnitude menor de 7.0; \vspace{0.5\baselineskip}
+        \item Maiores correlações:
+        \begin{itemize}
+            \item Significância e Impacto populacional;
+            \item Significância e Magnitude;
+            \item Significância e Danos estruturais;
+            \item Profundidade e Danos estruturais
+        \end{itemize}\vspace{0.5\baselineskip}
+        \item Aumento da profundidade média ao longo dos anos \vspace{0.5\baselineskip}
+        \item Aaa 
+    \end{itemize}
+\end{frame}
+\end{document}
