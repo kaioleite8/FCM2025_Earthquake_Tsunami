@@ -324,7 +324,14 @@ gr_data <- dados %>%
 ggplot(gr_data, aes(x = magnitude, y = log_n)) +
   geom_point() +
   stat_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
-  labs(title = "Lei de Gutenberg-Richter", y = "Log(N >= M)", x = "Magnitude")
+  labs(title = "Lei de Gutenberg-Richter", y = "Log(N >= M)", x = "Magnitude")+
+  theme_minimal()+
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, face = "bold", margin = margin(r = 10)),
+    axis.text = element_text(size = 11)
+  )
 
 # --- CORREÇÃO DO CÁLCULO DE ENERGIA ---
 
@@ -350,9 +357,12 @@ dados %>%
   ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(face = "bold", size = 14),
-    axis.text.x = element_text(angle = 45, hjust = 1)
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, face = "bold", margin = margin(r = 10)),
+    axis.text = element_text(size = 11, angle = 45, hjust = 1)
   )
+
 # Séries temporais
 annual_summary <- dados %>%
   group_by(Year) %>%
