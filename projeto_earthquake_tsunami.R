@@ -326,21 +326,33 @@ ggplot(gr_data, aes(x = magnitude, y = log_n)) +
   stat_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
   labs(title = "Lei de Gutenberg-Richter", y = "Log(N >= M)", x = "Magnitude")
 
-# 2. Energia Liberada
+# --- CORREÇÃO DO CÁLCULO DE ENERGIA ---
+
+# 1. Criar a coluna 'energy' baseada na Magnitude
+# Fórmula de Gutenberg-Richter (Energia em Joules): log E = 4.8 + 1.5M
+dados <- dados %>% 
+  mutate(energy = 10^(4.8 + 1.5 * magnitude))
+
+# 2. Gerar o gráfico
 dados %>%
   group_by(Year) %>%
   summarise(total_energy = sum(energy, na.rm = TRUE)) %>%
   ggplot(aes(x = Year, y = total_energy)) +
-  geom_col(fill = "firebrick") + 
-  # 'scientific = FALSE' para evitar notação científica, 
+  geom_col(fill = "firebrick", alpha = 0.8) + 
+  # Formatar eixo Y para notação científica (necessário pois os números são gigantes)
   scale_y_continuous(labels = scales::scientific) +
+  scale_x_continuous(breaks = seq(min(dados$Year, na.rm=T), max(dados$Year, na.rm=T), by = 2)) +
   labs(
-    title = "Energia Sísmica: A Desproporção dos Grandes Eventos",
-    subtitle = "2004 (Sumatra) e 2011 (Tohoku)",
+    title = "Energia Sísmica Total Liberada por Ano",
+    subtitle = "A escala exponencial destaca anos com eventos extremos (ex: 2004, 2011)",
     y = "Energia Total (Joules)",
     x = "Ano"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 # Séries temporais
 annual_summary <- dados %>%
   group_by(Year) %>%
